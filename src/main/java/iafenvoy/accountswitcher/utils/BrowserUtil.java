@@ -69,6 +69,10 @@ public class BrowserUtil {
         return getData(url, Method.GET, header, "");
     }
 
+    public static String getData(String url) {
+        return getData(url, Method.GET, new ArrayList<>(), null);
+    }
+
     public static String getData(String url, Method method, List<Pair<String, String>> header, String data) {
         HttpsURLConnection con = null;
         try {
@@ -77,8 +81,9 @@ public class BrowserUtil {
             con.setDoInput(true);
             con.setDoOutput(true);
             con.setUseCaches(false);
-            for (Pair<String, String> p : header)
-                con.setRequestProperty(p.first, p.second);
+            if (header.size() > 0)
+                for (Pair<String, String> p : header)
+                    con.setRequestProperty(p.first, p.second);
             if (method == Method.POST) {
                 OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream(), StandardCharsets.UTF_8);
                 osw.write(data);

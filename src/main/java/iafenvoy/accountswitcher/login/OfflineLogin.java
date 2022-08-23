@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class OfflineLogin {
     public static Account generateAccount(String username) {
-        String uuid = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString().replace("-", "");
         return new Account(Account.AccountType.Offline, "", "", username, uuid);
     }
 }

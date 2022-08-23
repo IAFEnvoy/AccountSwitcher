@@ -1,10 +1,15 @@
 package iafenvoy.accountswitcher.mixins;
 
+import iafenvoy.accountswitcher.AccountSwitcher;
 import iafenvoy.accountswitcher.config.AccountManager;
+import iafenvoy.accountswitcher.gui.AccountScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
@@ -16,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin extends Screen {
+    private static final Identifier SWITCH_ACCOUNT_ICON_TEXTURE = new Identifier(AccountSwitcher.MOD_ID, "textures/gui/account.png");
     @Final
     @Shadow
     private boolean doBackgroundFade;
@@ -24,6 +30,13 @@ public class TitleScreenMixin extends Screen {
 
     protected TitleScreenMixin(Text title) {
         super(title);
+    }
+
+    @Inject(method = "init", at = @At("RETURN"))
+    protected void init(CallbackInfo ci) {
+        assert this.client != null;
+        int j = this.height / 4 + 48;
+        this.addButton(new TexturedButtonWidget(this.width / 2 + 104, j + 24 * 2, 20, 20, 0, 0, 20, SWITCH_ACCOUNT_ICON_TEXTURE, 32, 64, (buttonWidget) -> this.client.openScreen(new AccountScreen(this)), new TranslatableText("as.gui.title")));
     }
 
     @Inject(method = "render", at = @At("RETURN"))

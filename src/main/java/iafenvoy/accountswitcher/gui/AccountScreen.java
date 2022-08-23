@@ -33,10 +33,10 @@ public class AccountScreen extends Screen {
         super.init();
         client.keyboard.setRepeatEvents(true);
         if (this.initialized)
-            this.widget.updateSize(100, this.width - 90, 32, this.height - 32);
+            this.widget.updateSize(100, this.width - 80, 32, this.height - 32);
         else {
             this.initialized = true;
-            this.widget = new AccountListWidget(this, client, 100, this.width - 90, 32, this.height - 32, 36);
+            this.widget = new AccountListWidget(this, client, 100, this.width - 80, 32, this.height - 32, 36);
             this.widget.setAccount(AccountManager.INSTANCE.getAccounts());
         }
         this.children.add(this.widget);

@@ -12,6 +12,8 @@ import iafenvoy.accountswitcher.utils.Profiler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 public class MicrosoftLogin {
@@ -226,5 +228,15 @@ public class MicrosoftLogin {
         JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         this.accessToken = json.get("access_token").getAsString();
         this.refreshToken = json.get("refresh_token").getAsString();
+    }
+
+    //获取头像
+    public String getAvatar(String uuid) {
+        String data = BrowserUtil.getData("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
+        JsonObject sessionJson = new JsonParser().parse(data).getAsJsonObject();
+        String base64 = sessionJson.get("properties").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString();
+        String skinData = Arrays.toString(Base64.getDecoder().decode(base64));
+        JsonObject skinJson = new JsonParser().parse(skinData).getAsJsonObject();
+        return skinJson.get("textures").getAsJsonObject().get("SKIN").getAsJsonObject().get("url").getAsString();
     }
 }

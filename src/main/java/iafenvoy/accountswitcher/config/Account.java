@@ -72,16 +72,23 @@ public class Account {
     }
 
     public void use(MicrosoftLogin login) {
-        new Thread(() -> {
-            login.useAccount(this);
+        if (this.type == AccountType.Microsoft)
+            new Thread(() -> {
+                login.useAccount(this);
+                Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
+                ((MinecraftClientAccessor) client).setSession(session);
+                AccountManager.CURRENT = this;
+            }).start();
+        else {
             Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
             ((MinecraftClientAccessor) client).setSession(session);
-        }).start();
-        AccountManager.CURRENT = this;
+            AccountManager.CURRENT = this;
+        }
     }
 
     public void refresh(MicrosoftLogin login) {
-        new Thread(() -> login.refreshAccessToken(this)).start();
+        if (this.type == AccountType.Microsoft)
+            new Thread(() -> login.refreshAccessToken(this)).start();
     }
 
     public enum AccountType {
