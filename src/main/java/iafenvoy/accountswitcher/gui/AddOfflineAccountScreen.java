@@ -25,6 +25,7 @@ public class AddOfflineAccountScreen extends Screen {
         super.init();
         this.usernameField = this.addButton(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 30, 200, 20, new LiteralText("")));
         this.addButton(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 10, 100, 20, new TranslatableText("as.gui.Accept"), button -> {
+            if (this.usernameField.getText().equals("")) return;
             Account account = OfflineLogin.generateAccount(this.usernameField.getText());
             parent.addAccount(account);
             this.openParent();

@@ -2,6 +2,7 @@
   "as.gui.title": "切换账号",
   "as.gui.AddOffline": "添加离线账号",
   "as.gui.AddMicrosoft": "添加微软账号",
+  "as.gui.AddInjector": "添加外置账号",
   "as.gui.DeleteAccount": "删除账号",
   "as.gui.UseAccount": "使用此账号",
   "as.toast.error.InvalidAccount": "此Microsoft账号未购买Minecraft",
@@ -13,6 +14,10 @@
   "as.gui.Accept": "确认",
   "as.gui.Cancel": "取消",
   "as.gui.offline.title": "添加离线账号",
+  "as.gui.injector.title": "添加外置账号",
   "as.titleScreen.nowUse": "当前使用的账号： %s ，类型： %s",
-  "as.gui.RefreshAccount": "刷新此账号"
+  "as.gui.RefreshAccount": "刷新此账号",
+  "as.gui.injector.label1": "认证服务器（只需要根域名）",
+  "as.gui.injector.label2": "用户名",
+  "as.gui.injector.label3": "密码"
 }

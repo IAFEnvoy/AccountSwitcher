@@ -1,22 +1,37 @@
 package iafenvoy.accountswitcher.config;
 
-import iafenvoy.accountswitcher.login.MicrosoftLogin;
+import com.mojang.authlib.exceptions.AuthenticationException;
+import com.mojang.authlib.minecraft.OfflineSocialInteractions;
+import com.mojang.authlib.minecraft.SocialInteractionsService;
+import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
+import iafenvoy.accountswitcher.AccountSwitcher;
+import iafenvoy.accountswitcher.gui.AccountScreen;
 import iafenvoy.accountswitcher.mixins.MinecraftClientAccessor;
-import iafenvoy.accountswitcher.utils.YggdrasilServer;
+import iafenvoy.accountswitcher.utils.LocalYggdrasilAuthenticationService;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.SocialInteractionsManager;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.Session;
 
 public class Account {
+    public static final Account EMPTY = new Account();
     private static final MinecraftClient client = MinecraftClient.getInstance();
     private final AccountType type;
-    private String accessToken, refreshToken, mcToken;
-    private String username, uuid;
-    private YggdrasilServer injectorServer;
+    private String accessToken = "", refreshToken = "", mcToken = "";
+    private String username = "", uuid = "";
+    private String injectorServer = "";
+
+    public Account() {
+        this.type = null;
+    }
 
     public Account(Session session) {
         this(session.getAccessToken().equals("") ? AccountType.Offline : AccountType.Microsoft, null, null, session.getUsername(), session.getUuid());
         this.mcToken = session.getAccessToken();
+    }
+
+    public Account(AccountType type) {
+        this.type = type;
     }
 
     public Account(AccountType type, String accessToken, String refreshToken, String username, String uuid) {
@@ -51,6 +66,10 @@ public class Account {
         return mcToken;
     }
 
+    public String getInjectorServer() {
+        return injectorServer;
+    }
+
     public void setMcToken(String mcToken) {
         this.mcToken = mcToken;
     }
@@ -71,13 +90,29 @@ public class Account {
         this.uuid = uuid;
     }
 
-    public void use(MicrosoftLogin login) {
+    public void setInjectorServer(String injectorServer) {
+        this.injectorServer = injectorServer;
+    }
+
+    public void use(AccountScreen screen) {
         if (this.type == AccountType.Microsoft)
             new Thread(() -> {
-                login.useAccount(this);
+                screen.microsoftLogin.useAccount(this);
                 Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
                 ((MinecraftClientAccessor) client).setSession(session);
                 AccountManager.CURRENT = this;
+            }).start();
+        else if (this.type == AccountType.Injector)
+            new Thread(() -> {
+                screen.injectorLogin.doLogin(this, injectorServer, username, accessToken);
+                Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
+                ((MinecraftClientAccessor) client).setSession(session);
+                YggdrasilAuthenticationService services = new LocalYggdrasilAuthenticationService(((MinecraftClientAccessor) client).getNetProxy(), this.injectorServer);
+                ((MinecraftClientAccessor) client).setServices(services.createMinecraftSessionService());
+                ((MinecraftClientAccessor) client).setField26902(this.method_31382(services, this.mcToken));
+                ((MinecraftClientAccessor) client).setManager(new SocialInteractionsManager(client, ((MinecraftClientAccessor) client).getField26902()));
+                AccountManager.CURRENT = this;
+                System.out.println(client.getSession().getProfile());
             }).start();
         else {
             Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
@@ -86,9 +121,21 @@ public class Account {
         }
     }
 
-    public void refresh(MicrosoftLogin login) {
+
+    private SocialInteractionsService method_31382(YggdrasilAuthenticationService yggdrasilAuthenticationService, String token) {
+        try {
+            return yggdrasilAuthenticationService.createSocialInteractionsService(token);
+        } catch (AuthenticationException e) {
+            AccountSwitcher.LOGGER.error("Failed to verify authentication", e);
+            return new OfflineSocialInteractions();
+        }
+    }
+
+    public void refresh(AccountScreen screen) {
         if (this.type == AccountType.Microsoft)
-            new Thread(() -> login.refreshAccessToken(this)).start();
+            new Thread(() -> screen.microsoftLogin.refreshAccessToken(this)).start();
+        if (this.type == AccountType.Injector)
+            new Thread(() -> screen.injectorLogin.doLogin(this, injectorServer, username, accessToken)).start();
     }
 
     public enum AccountType {

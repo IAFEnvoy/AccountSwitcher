@@ -3,8 +3,6 @@
   "minVersion": "0.7",
   "package": "iafenvoy.accountswitcher.mixins",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-  ],
   "client": [
     "MinecraftClientAccessor",
     "TitleScreenMixin"

@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrowserUtil {
+public class NetworkUtil {
     public static void openBrowser(String title, String url, Callback<String> callback) {
         Display display = new Display();
         Shell shell = new Shell(display);
@@ -108,6 +108,31 @@ public class BrowserUtil {
             e.printStackTrace();
         }
         return builder.toString();
+    }
+
+
+    public static int getHttpState(String url, List<Pair<String, String>> header, String data) {
+        HttpsURLConnection con;
+        try {
+            con = (HttpsURLConnection) new URL(url).openConnection();
+            con.setRequestMethod("POST");
+            con.setDoInput(true);
+            con.setDoOutput(true);
+            con.setUseCaches(false);
+            if (header.size() > 0)
+                for (Pair<String, String> p : header)
+                    con.setRequestProperty(p.first, p.second);
+            OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream(), StandardCharsets.UTF_8);
+            osw.write(data);
+            osw.flush();
+            osw.close();
+            int code = con.getResponseCode();
+            con.disconnect();
+            return code;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 404;
     }
 
     private enum Method {

@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.icu.impl.Pair;
 import iafenvoy.accountswitcher.config.Account;
-import iafenvoy.accountswitcher.utils.BrowserUtil;
+import iafenvoy.accountswitcher.utils.NetworkUtil;
 import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import iafenvoy.accountswitcher.utils.Profiler;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +51,7 @@ public class MicrosoftLogin {
             return account;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return null;
+            return Account.EMPTY;
         }
     }
 
@@ -109,7 +109,7 @@ public class MicrosoftLogin {
     //教程：https://minecraft.fandom.com/zh/wiki/%E6%95%99%E7%A8%8B/%E7%BC%96%E5%86%99%E5%90%AF%E5%8A%A8%E5%99%A8
     //第一步：微软Oauth流程，这个操作只能浏览器执行
     private void openOauth() {
-        BrowserUtil.openBrowser("Login your Microsoft account", OauthUrl, url -> {
+        NetworkUtil.openBrowser("Login your Microsoft account", OauthUrl, url -> {
             String search = url.split("\\?")[1];
             String[] data = search.split("&");
             for (String s : data) {
@@ -135,7 +135,7 @@ public class MicrosoftLogin {
         map.add(Pair.of("redirect_uri", "https://login.live.com/oauth20_desktop.srf"));
         map.add(Pair.of("scope", "service::user.auth.xboxlive.com::MBI_SSL"));
 
-        String data = BrowserUtil.getDataWithForm("https://login.live.com/oauth20_token.srf", map);
+        String data = NetworkUtil.getDataWithForm("https://login.live.com/oauth20_token.srf", map);
         JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         this.accessToken = json.get("access_token").getAsString();
         this.refreshToken = json.get("refresh_token").getAsString();
@@ -156,7 +156,7 @@ public class MicrosoftLogin {
         root.addProperty("RelyingParty", "http://auth.xboxlive.com");
         root.addProperty("TokenType", "JWT");
 
-        String data = BrowserUtil.getDataWithJson("https://user.auth.xboxlive.com/user/authenticate", root);
+        String data = NetworkUtil.getDataWithJson("https://user.auth.xboxlive.com/user/authenticate", root);
         JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         this.xblToken = json.get("Token").getAsString();
         this.userHash = json.get("DisplayClaims").getAsJsonObject().get("xui").getAsJsonArray().get(0).getAsJsonObject().get("uhs").getAsString();
@@ -178,7 +178,7 @@ public class MicrosoftLogin {
         root.addProperty("RelyingParty", "rp://api.minecraftservices.com/");
         root.addProperty("TokenType", "JWT");
 
-        String data = BrowserUtil.getDataWithJson("https://xsts.auth.xboxlive.com/xsts/authorize", root);
+        String data = NetworkUtil.getDataWithJson("https://xsts.auth.xboxlive.com/xsts/authorize", root);
         JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         this.xstsToken = json.get("Token").getAsString();
     }
@@ -194,7 +194,7 @@ public class MicrosoftLogin {
         JsonObject root = new JsonObject();
         root.addProperty("identityToken", String.format("XBL3.0 x=%s;%s", this.userHash, this.xstsToken));
 
-        String data = BrowserUtil.getDataWithJson("https://api.minecraftservices.com/authentication/login_with_xbox", root);
+        String data = NetworkUtil.getDataWithJson("https://api.minecraftservices.com/authentication/login_with_xbox", root);
         JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         this.mcToken = json.get("access_token").getAsString();
     }
@@ -204,7 +204,7 @@ public class MicrosoftLogin {
         if (this.mcToken == null)
             throw new IllegalArgumentException("Fail to get Minecraft token");
 
-        String data = BrowserUtil.getDataWithHeader("https://api.minecraftservices.com/minecraft/profile", Lists.newArrayList(Pair.of("Authorization", "Bearer " + this.mcToken)));
+        String data = NetworkUtil.getDataWithHeader("https://api.minecraftservices.com/minecraft/profile", Lists.newArrayList(Pair.of("Authorization", "Bearer " + this.mcToken)));
         JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         if (json.has("error"))
             throw new IllegalMicrosoftAccountException();
@@ -224,7 +224,7 @@ public class MicrosoftLogin {
         map.add(Pair.of("redirect_uri", "https://login.live.com/oauth20_desktop.srf"));
         map.add(Pair.of("scope", "service::user.auth.xboxlive.com::MBI_SSL"));
 
-        String data = BrowserUtil.getDataWithForm("https://login.live.com/oauth20_token.srf", map);
+        String data = NetworkUtil.getDataWithForm("https://login.live.com/oauth20_token.srf", map);
         JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         this.accessToken = json.get("access_token").getAsString();
         this.refreshToken = json.get("refresh_token").getAsString();
@@ -232,7 +232,7 @@ public class MicrosoftLogin {
 
     //获取头像
     public String getAvatar(String uuid) {
-        String data = BrowserUtil.getData("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
+        String data = NetworkUtil.getData("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
         JsonObject sessionJson = new JsonParser().parse(data).getAsJsonObject();
         String base64 = sessionJson.get("properties").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString();
         String skinData = Arrays.toString(Base64.getDecoder().decode(base64));

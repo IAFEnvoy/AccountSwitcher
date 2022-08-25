@@ -16,7 +16,7 @@ import java.util.List;
 
 public class AccountManager {
     public static final AccountManager INSTANCE = new AccountManager();
-    public static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final MinecraftClient client = MinecraftClient.getInstance();
     private static final String FILE_PATH = "./config/accounts.json";
     public static Account CURRENT = null;
     private final List<Account> accounts = new ArrayList<>();
@@ -53,6 +53,15 @@ public class AccountManager {
                     String username = obj.get("username").getAsString();
                     String uuid = obj.get("uuid").getAsString();
                     this.accounts.add(new Account(type, accessToken, refreshToken, username, uuid));
+                } else {
+                    String accessToken = obj.get("accessToken").getAsString();
+                    String username = obj.get("username").getAsString();
+                    String uuid = obj.get("uuid").getAsString();
+                    String injectorServer = obj.get("injectorServer").getAsString();
+                    Account a = new Account(type, accessToken, "", username, uuid);
+                    a.setInjectorServer(injectorServer);
+                    this.accounts.add(a);
+
                 }
             }
         } catch (Exception e) {
@@ -73,6 +82,11 @@ public class AccountManager {
                     obj.addProperty("refreshToken", account.getRefreshToken());
                     obj.addProperty("username", account.getUsername());
                     obj.addProperty("uuid", account.getUuid());
+                } else {
+                    obj.addProperty("accessToken", account.getAccessToken());
+                    obj.addProperty("username", account.getUsername());
+                    obj.addProperty("uuid", account.getUuid());
+                    obj.addProperty("injectorServer", account.getInjectorServer());
                 }
                 array.add(obj);
             }
