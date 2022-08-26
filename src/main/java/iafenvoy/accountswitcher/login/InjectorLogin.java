@@ -5,8 +5,6 @@ import com.google.gson.JsonParser;
 import iafenvoy.accountswitcher.config.Account;
 import iafenvoy.accountswitcher.utils.NetworkUtil;
 
-import java.util.ArrayList;
-
 public class InjectorLogin {
     private String stats = "";
 

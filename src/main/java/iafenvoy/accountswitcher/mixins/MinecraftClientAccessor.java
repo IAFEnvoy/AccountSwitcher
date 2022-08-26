@@ -4,6 +4,7 @@ import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.minecraft.SocialInteractionsService;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.SocialInteractionsManager;
+import net.minecraft.client.texture.PlayerSkinProvider;
 import net.minecraft.client.util.Session;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -29,9 +30,10 @@ public interface MinecraftClientAccessor {
     @Accessor("field_26902")
     void setField26902(SocialInteractionsService service);
 
+    @Mutable
+    @Accessor("skinProvider")
+    void setSkinProvider(PlayerSkinProvider skinProvider);
+
     @Accessor("netProxy")
     Proxy getNetProxy();
-
-    @Accessor("field_26902")
-    SocialInteractionsService getField26902();
 }

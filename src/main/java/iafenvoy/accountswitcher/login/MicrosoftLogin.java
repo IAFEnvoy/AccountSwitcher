@@ -219,7 +219,7 @@ public class MicrosoftLogin {
 
         List<Pair<String, String>> map = new ArrayList<>();
         map.add(Pair.of("client_id", "00000000402b5328"));
-        map.add(Pair.of("code", this.code));
+        map.add(Pair.of("code", this.refreshToken));
         map.add(Pair.of("grant_type", "authorization_code"));
         map.add(Pair.of("redirect_uri", "https://login.live.com/oauth20_desktop.srf"));
         map.add(Pair.of("scope", "service::user.auth.xboxlive.com::MBI_SSL"));
@@ -230,13 +230,4 @@ public class MicrosoftLogin {
         this.refreshToken = json.get("refresh_token").getAsString();
     }
 
-    //获取头像
-    public String getAvatar(String uuid) {
-        String data = NetworkUtil.getData("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
-        JsonObject sessionJson = new JsonParser().parse(data).getAsJsonObject();
-        String base64 = sessionJson.get("properties").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString();
-        String skinData = Arrays.toString(Base64.getDecoder().decode(base64));
-        JsonObject skinJson = new JsonParser().parse(skinData).getAsJsonObject();
-        return skinJson.get("textures").getAsJsonObject().get("SKIN").getAsJsonObject().get("url").getAsString();
-    }
 }

@@ -48,7 +48,7 @@ public class AccountScreen extends Screen {
         this.addButton(new ButtonWidget(10, 55, 80, 20, new TranslatableText("as.gui.AddMicrosoft"), button -> new Thread(() -> {
             try {
                 Account account = microsoftLogin.doAuth();
-                if (account != null)
+                if (account != Account.EMPTY)
                     this.addAccount(account);
             } catch (IllegalMicrosoftAccountException e) {
                 ToastUtil.showToast("as.toast.error.InvalidAccount", "as.toast.error.InvalidAccount.text");

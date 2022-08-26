@@ -33,7 +33,7 @@ public class InjectorEnvironment implements Environment {
 
     @Override
     public String getName() {
-        return "Injector";
+        return "Authlib-Injector";
     }
 
     @Override

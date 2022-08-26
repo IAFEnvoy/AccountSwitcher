@@ -1,17 +1,23 @@
 package iafenvoy.accountswitcher.config;
 
 import com.mojang.authlib.exceptions.AuthenticationException;
+import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.minecraft.OfflineSocialInteractions;
 import com.mojang.authlib.minecraft.SocialInteractionsService;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import iafenvoy.accountswitcher.AccountSwitcher;
 import iafenvoy.accountswitcher.gui.AccountScreen;
 import iafenvoy.accountswitcher.mixins.MinecraftClientAccessor;
+import iafenvoy.accountswitcher.mixins.PlayerSkinProviderAccessor;
 import iafenvoy.accountswitcher.utils.LocalYggdrasilAuthenticationService;
+import iafenvoy.accountswitcher.utils.LocalYggdrasilMinecraftSessionService;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.SocialInteractionsManager;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.texture.PlayerSkinProvider;
 import net.minecraft.client.util.Session;
+
+import java.io.File;
 
 public class Account {
     public static final Account EMPTY = new Account();
@@ -23,11 +29,6 @@ public class Account {
 
     public Account() {
         this.type = null;
-    }
-
-    public Account(Session session) {
-        this(session.getAccessToken().equals("") ? AccountType.Offline : AccountType.Microsoft, null, null, session.getUsername(), session.getUuid());
-        this.mcToken = session.getAccessToken();
     }
 
     public Account(AccountType type) {
@@ -62,10 +63,6 @@ public class Account {
         this.refreshToken = refreshToken;
     }
 
-    public String getMcToken() {
-        return mcToken;
-    }
-
     public String getInjectorServer() {
         return injectorServer;
     }
@@ -98,27 +95,38 @@ public class Account {
         if (this.type == AccountType.Microsoft)
             new Thread(() -> {
                 screen.microsoftLogin.useAccount(this);
-                Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
-                ((MinecraftClientAccessor) client).setSession(session);
+                YggdrasilAuthenticationService services = new YggdrasilAuthenticationService(((MinecraftClientAccessor) client).getNetProxy());
+                this.applyServices(services, false);
                 AccountManager.CURRENT = this;
             }).start();
         else if (this.type == AccountType.Injector)
             new Thread(() -> {
                 screen.injectorLogin.doLogin(this, injectorServer, username, accessToken);
-                Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
-                ((MinecraftClientAccessor) client).setSession(session);
                 YggdrasilAuthenticationService services = new LocalYggdrasilAuthenticationService(((MinecraftClientAccessor) client).getNetProxy(), this.injectorServer);
-                ((MinecraftClientAccessor) client).setServices(services.createMinecraftSessionService());
-                ((MinecraftClientAccessor) client).setField26902(this.method_31382(services, this.mcToken));
-                ((MinecraftClientAccessor) client).setManager(new SocialInteractionsManager(client, ((MinecraftClientAccessor) client).getField26902()));
+                this.applyServices(services, true);
                 AccountManager.CURRENT = this;
-                System.out.println(client.getSession().getProfile());
             }).start();
         else {
             Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
             ((MinecraftClientAccessor) client).setSession(session);
             AccountManager.CURRENT = this;
         }
+    }
+
+    private void applyServices(YggdrasilAuthenticationService services, boolean isInjector) {
+        Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
+        ((MinecraftClientAccessor) client).setSession(session);
+        MinecraftSessionService service;
+        if (isInjector)
+            service = new LocalYggdrasilMinecraftSessionService(services, this.injectorServer);
+        else
+            service = services.createMinecraftSessionService();
+        ((MinecraftClientAccessor) client).setServices(service);
+        SocialInteractionsService field26902 = this.method_31382(services, this.mcToken);
+        ((MinecraftClientAccessor) client).setField26902(field26902);
+        ((MinecraftClientAccessor) client).setManager(new SocialInteractionsManager(client, field26902));
+        File skinDir = ((PlayerSkinProviderAccessor) client.getSkinProvider()).getSkinCacheDir();
+        ((MinecraftClientAccessor) client).setSkinProvider(new PlayerSkinProvider(client.getTextureManager(), skinDir, service));
     }
 
 

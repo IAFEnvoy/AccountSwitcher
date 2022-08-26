@@ -22,9 +22,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.11.3",
-    "fabric": "*",
     "minecraft": "1.16.x",
-    "java": ">=8",
-    "malilib": "*"
+    "java": ">=8"
   }
 }
