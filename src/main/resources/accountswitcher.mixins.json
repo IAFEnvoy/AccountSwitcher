@@ -4,7 +4,6 @@
   "package": "iafenvoy.accountswitcher.mixins",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "AbstractClientPlayerEntityMixin",
     "MinecraftClientAccessor",
     "PlayerSkinProviderAccessor",
     "TitleScreenMixin"
