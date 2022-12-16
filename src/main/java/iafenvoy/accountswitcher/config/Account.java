@@ -149,7 +149,8 @@ public class Account {
     public enum AccountType {
         Offline("as.type.Offline"),//离线模式
         Microsoft("as.type.Microsoft"),//微软账户正版
-        Injector("as.type.Injector");//外置登录
+        Injector("as.type.Injector"),//外置登录
+        Custom("as.type.Custom");//自定义登录
         //不支持Mojang账户和统一通行证哦~
 
         private final String key;

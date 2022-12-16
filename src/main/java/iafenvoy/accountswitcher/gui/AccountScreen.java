@@ -15,9 +15,9 @@ import net.minecraft.text.TranslatableText;
 
 public class AccountScreen extends Screen {
     private static final MinecraftClient client = MinecraftClient.getInstance();
-    private final Screen parent;
     public final MicrosoftLogin microsoftLogin = new MicrosoftLogin();
     public final InjectorLogin injectorLogin = new InjectorLogin();
+    private final Screen parent;
     private AccountListWidget widget;
     private boolean initialized = false;
 
@@ -52,14 +52,12 @@ public class AccountScreen extends Screen {
                     this.addAccount(account);
             } catch (IllegalMicrosoftAccountException e) {
                 ToastUtil.showToast("as.toast.error.InvalidAccount", "as.toast.error.InvalidAccount.text");
+            } catch (Exception e) {
+                ToastUtil.showToast("ERROR", e.getLocalizedMessage());
             }
         }, "Microsoft Login").start()));
         this.addButton(new ButtonWidget(10, 75, 80, 20, new TranslatableText("as.gui.AddInjector"), button -> client.openScreen(new AddInjectorAccountScreen(this))));
-        this.addButton(new ButtonWidget(10, 95, 80, 20, new TranslatableText("as.gui.DeleteAccount"), button -> {
-            if (this.widget.getSelected() != null && this.widget.getSelected() instanceof AccountListWidget.AccountEntry)
-                AccountManager.INSTANCE.deleteAccountByUuid(((AccountListWidget.AccountEntry) this.widget.getSelected()).getAccount().getUuid());
-            this.refreshWidget();
-        }));
+        this.addButton(new ButtonWidget(10, 95, 80, 20, new TranslatableText("as.gui.AddCustom"), button -> client.openScreen(new AddCustomAccountScreen(this))));
         this.addButton(new ButtonWidget(10, 115, 80, 20, new TranslatableText("as.gui.UseAccount"), button -> {
             if (this.widget.getSelected() != null && this.widget.getSelected() instanceof AccountListWidget.AccountEntry)
                 ((AccountListWidget.AccountEntry) this.widget.getSelected()).getAccount().use(this);
@@ -67,6 +65,11 @@ public class AccountScreen extends Screen {
         this.addButton(new ButtonWidget(10, 135, 80, 20, new TranslatableText("as.gui.RefreshAccount"), button -> {
             if (this.widget.getSelected() != null && this.widget.getSelected() instanceof AccountListWidget.AccountEntry)
                 ((AccountListWidget.AccountEntry) this.widget.getSelected()).getAccount().refresh(this);
+        }));
+        this.addButton(new ButtonWidget(10, 180, 80, 20, new TranslatableText("as.gui.DeleteAccount"), button -> {
+            if (this.widget.getSelected() != null && this.widget.getSelected() instanceof AccountListWidget.AccountEntry)
+                AccountManager.INSTANCE.deleteAccountByUuid(((AccountListWidget.AccountEntry) this.widget.getSelected()).getAccount().getUuid());
+            this.refreshWidget();
         }));
     }
 

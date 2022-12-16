@@ -6,14 +6,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.icu.impl.Pair;
 import iafenvoy.accountswitcher.config.Account;
-import iafenvoy.accountswitcher.utils.NetworkUtil;
 import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
+import iafenvoy.accountswitcher.utils.NetworkUtil;
 import iafenvoy.accountswitcher.utils.Profiler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 
 public class MicrosoftLogin {
