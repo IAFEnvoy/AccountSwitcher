@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,12 +51,12 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
     @Override
     public void setSelected(@Nullable AccountListWidget.Entry entry) {
         super.setSelected(entry);
-        NarratorManager.INSTANCE.narrate((new TranslatableText("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelected())).account.getUsername())).getString());
+        NarratorManager.INSTANCE.narrate((new TranslatableText("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelectedOrNull())).account.getUsername())).getString());
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        AccountListWidget.Entry entry = this.getSelected();
+        AccountListWidget.Entry entry = this.getSelectedOrNull();
         return entry != null && entry.keyPressed(keyCode, scanCode, modifiers) || super.keyPressed(keyCode, scanCode, modifiers);
     }
 
@@ -86,6 +87,11 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
 
         public Account getAccount() {
             return account;
+        }
+
+        @Override
+        public Text getNarration() {
+            return Text.of("");
         }
     }
 }

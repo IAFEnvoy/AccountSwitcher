@@ -27,13 +27,13 @@ public interface MinecraftClientAccessor {
     void setManager(SocialInteractionsManager manager);
 
     @Mutable
-    @Accessor("field_26902")
+    @Accessor("socialInteractionsService")
     void setField26902(SocialInteractionsService service);
 
     @Mutable
     @Accessor("skinProvider")
     void setSkinProvider(PlayerSkinProvider skinProvider);
 
-    @Accessor("netProxy")
+    @Accessor("networkProxy")
     Proxy getNetProxy();
 }

@@ -1,10 +1,10 @@
 plugins {
-    id 'fabric-loom' version '0.6-SNAPSHOT'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -20,12 +20,12 @@ repositories {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:1.16.5"
-    mappings "net.fabricmc:yarn:1.16.5+build.10:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.11.6"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     //mod menu api
-    modImplementation "io.github.prospector.modmenu:modmenu:1.16.8"
+    modImplementation "io.github.prospector.modmenu:modmenu:2.0.17"
 
     // https://mvnrepository.com/artifact/org.eclipse.swt/org.eclipse.swt.win32.win32.x86_64
     implementation group: 'org.eclipse.swt', name: 'org.eclipse.swt.win32.win32.x86_64', version: '4.3'
@@ -48,7 +48,7 @@ tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
 
     // Minecraft 1.17 (21w19a) upwards uses Java 16.
-    it.options.release = 8
+    it.options.release = 16
 }
 
 java {

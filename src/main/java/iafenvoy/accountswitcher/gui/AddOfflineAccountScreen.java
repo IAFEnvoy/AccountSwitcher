@@ -5,6 +5,7 @@ import iafenvoy.accountswitcher.login.OfflineLogin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -23,18 +24,18 @@ public class AddOfflineAccountScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.usernameField = this.addButton(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 30, 200, 20, new LiteralText("")));
-        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 10, 100, 20, new TranslatableText("as.gui.Accept"), button -> {
+        this.usernameField = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 30, 200, 20, new LiteralText("")));
+        this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 10, 100, 20, new TranslatableText("as.gui.Accept"), button -> {
             if (this.usernameField.getText().equals("")) return;
             Account account = OfflineLogin.generateAccount(this.usernameField.getText());
             parent.addAccount(account);
             this.openParent();
         }));
-        this.addButton(new ButtonWidget(this.width / 2, this.height / 2 + 10, 100, 20, new TranslatableText("as.gui.Cancel"), button -> this.openParent()));
+        this.addField(new ButtonWidget(this.width / 2, this.height / 2 + 10, 100, 20, new TranslatableText("as.gui.Cancel"), button -> this.openParent()));
     }
 
     public void openParent() {
-        client.openScreen(this.parent);
+        client.setScreen(this.parent);
     }
 
     @Override
@@ -42,5 +43,11 @@ public class AddOfflineAccountScreen extends Screen {
         super.renderBackground(matrices);
         drawCenteredText(matrices, textRenderer, this.title, this.width / 2, this.height / 2 - 50, 16777215);
         super.render(matrices, mouseX, mouseY, delta);
+    }
+
+    public ClickableWidget addField(ClickableWidget drawable){
+        this.addDrawable(drawable);
+        this.addSelectableChild(drawable);
+        return drawable;
     }
 }

@@ -5,6 +5,7 @@ import iafenvoy.accountswitcher.config.AccountManager;
 import iafenvoy.accountswitcher.gui.AccountScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -36,7 +37,7 @@ public class TitleScreenMixin extends Screen {
     protected void init(CallbackInfo ci) {
         assert this.client != null;
         int j = this.height / 4 + 48;
-        this.addButton(new TexturedButtonWidget(this.width / 2 + 104, j + 24 * 2, 20, 20, 0, 0, 20, SWITCH_ACCOUNT_ICON_TEXTURE, 32, 64, (buttonWidget) -> this.client.openScreen(new AccountScreen(this)), new TranslatableText("as.gui.title")));
+        this.addField(new TexturedButtonWidget(this.width / 2 + 104, j + 24 * 2, 20, 20, 0, 0, 20, SWITCH_ACCOUNT_ICON_TEXTURE, 32, 64, (buttonWidget) -> this.client.setScreen(new AccountScreen(this)), new TranslatableText("as.gui.title")));
     }
 
     @Inject(method = "render", at = @At("RETURN"))
@@ -45,5 +46,10 @@ public class TitleScreenMixin extends Screen {
         float g = this.doBackgroundFade ? MathHelper.clamp(f - 1.0F, 0.0F, 1.0F) : 1.0F;
         int l = MathHelper.ceil(g * 255.0F) << 24;
         drawCenteredText(matrices, this.textRenderer, AccountManager.getAccountInfoText(), this.width / 2, this.height - 50, 16777215 | l);
+    }
+
+    public void addField(ClickableWidget drawable){
+        this.addDrawable(drawable);
+        this.addSelectableChild(drawable);
     }
 }
