@@ -3,10 +3,8 @@ package iafenvoy.accountswitcher.gui;
 import iafenvoy.accountswitcher.config.Account;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
     @Override
     public void setSelected(@Nullable AccountListWidget.Entry entry) {
         super.setSelected(entry);
-        NarratorManager.INSTANCE.narrate((new TranslatableText("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelectedOrNull())).account.getUsername())).getString());
+        client.getNarratorManager().narrate((Text.translatable("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelectedOrNull())).account.getUsername())).getString());
     }
 
     @Override

@@ -2,14 +2,13 @@ package iafenvoy.accountswitcher.gui;
 
 import iafenvoy.accountswitcher.config.Account;
 import iafenvoy.accountswitcher.login.OfflineLogin;
+import iafenvoy.accountswitcher.utils.ButtonWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class AddOfflineAccountScreen extends Screen {
     private static final MinecraftClient client = MinecraftClient.getInstance();
@@ -17,21 +16,21 @@ public class AddOfflineAccountScreen extends Screen {
     private TextFieldWidget usernameField;
 
     public AddOfflineAccountScreen(AccountScreen parent) {
-        super(new TranslatableText("as.gui.offline.title"));
+        super(Text.translatable("as.gui.offline.title"));
         this.parent = parent;
     }
 
     @Override
     protected void init() {
         super.init();
-        this.usernameField = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 30, 200, 20, new LiteralText("")));
-        this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 10, 100, 20, new TranslatableText("as.gui.Accept"), button -> {
+        this.usernameField = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 30, 200, 20, Text.empty()));
+        this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 10, 100, 20, Text.translatable("as.gui.Accept"), button -> {
             if (this.usernameField.getText().equals("")) return;
             Account account = OfflineLogin.generateAccount(this.usernameField.getText());
             parent.addAccount(account);
             this.openParent();
         }));
-        this.addField(new ButtonWidget(this.width / 2, this.height / 2 + 10, 100, 20, new TranslatableText("as.gui.Cancel"), button -> this.openParent()));
+        this.addField(new ButtonWidget(this.width / 2, this.height / 2 + 10, 100, 20, Text.translatable("as.gui.Cancel"), button -> this.openParent()));
     }
 
     public void openParent() {
@@ -45,7 +44,7 @@ public class AddOfflineAccountScreen extends Screen {
         super.render(matrices, mouseX, mouseY, delta);
     }
 
-    public ClickableWidget addField(ClickableWidget drawable){
+    public ClickableWidget addField(ClickableWidget drawable) {
         this.addDrawable(drawable);
         this.addSelectableChild(drawable);
         return drawable;

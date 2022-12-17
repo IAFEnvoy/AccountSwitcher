@@ -9,7 +9,6 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
@@ -37,7 +36,7 @@ public class TitleScreenMixin extends Screen {
     protected void init(CallbackInfo ci) {
         assert this.client != null;
         int j = this.height / 4 + 48;
-        this.addField(new TexturedButtonWidget(this.width / 2 + 104, j + 24 * 2, 20, 20, 0, 0, 20, SWITCH_ACCOUNT_ICON_TEXTURE, 32, 64, (buttonWidget) -> this.client.setScreen(new AccountScreen(this)), new TranslatableText("as.gui.title")));
+        this.addField(new TexturedButtonWidget(this.width / 2 + 104, j + 24 * 2, 20, 20, 0, 0, 20, SWITCH_ACCOUNT_ICON_TEXTURE, 32, 64, (buttonWidget) -> this.client.setScreen(new AccountScreen(this)), Text.translatable("as.gui.title")));
     }
 
     @Inject(method = "render", at = @At("RETURN"))
@@ -48,7 +47,7 @@ public class TitleScreenMixin extends Screen {
         drawCenteredText(matrices, this.textRenderer, AccountManager.getAccountInfoText(), this.width / 2, this.height - 50, 16777215 | l);
     }
 
-    public void addField(ClickableWidget drawable){
+    public void addField(ClickableWidget drawable) {
         this.addDrawable(drawable);
         this.addSelectableChild(drawable);
     }

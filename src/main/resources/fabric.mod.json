@@ -12,9 +12,6 @@
   "entrypoints": {
     "client": [
       "iafenvoy.accountswitcher.AccountSwitcher"
-    ],
-    "modmenu": [
-      "iafenvoy.accountswitcher.compat.ModMenu"
     ]
   },
   "mixins": [
@@ -22,7 +19,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.12.12",
-    "minecraft": "1.18.x",
+    "minecraft": "1.19.x",
     "java": ">=17"
   }
 }

@@ -8,7 +8,6 @@ import iafenvoy.accountswitcher.login.OfflineLogin;
 import iafenvoy.accountswitcher.utils.FileUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,13 +34,13 @@ public class AccountManager {
             type = "Error";
         else
             type = AccountManager.CURRENT.getType().getName();
-        return new TranslatableText("as.titleScreen.nowUse", client.getSession().getUsername(), type);
+        return Text.translatable("as.titleScreen.nowUse", client.getSession().getUsername(), type);
     }
 
     public void load() {
         try {
             String data = FileUtil.readFile(FILE_PATH);
-            JsonArray json = new JsonParser().parse(data).getAsJsonArray();
+            JsonArray json = JsonParser.parseString(data).getAsJsonArray();
             for (JsonElement ele : json) {
                 JsonObject obj = ele.getAsJsonObject();
                 Account.AccountType type = Account.AccountType.getByName(obj.get("type").getAsString());
