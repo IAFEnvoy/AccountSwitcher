@@ -1,7 +1,7 @@
 package iafenvoy.accountswitcher.mixins;
 
 import com.mojang.authlib.minecraft.MinecraftSessionService;
-import com.mojang.authlib.minecraft.SocialInteractionsService;
+import com.mojang.authlib.minecraft.UserApiService;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.SocialInteractionsManager;
 import net.minecraft.client.texture.PlayerSkinProvider;
@@ -27,8 +27,8 @@ public interface MinecraftClientAccessor {
     void setManager(SocialInteractionsManager manager);
 
     @Mutable
-    @Accessor("socialInteractionsService")
-    void setField26902(SocialInteractionsService service);
+    @Accessor("userApiService")
+    void setField26902(UserApiService service);
 
     @Mutable
     @Accessor("skinProvider")

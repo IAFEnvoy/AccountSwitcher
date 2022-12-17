@@ -2,8 +2,7 @@ package iafenvoy.accountswitcher.config;
 
 import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
-import com.mojang.authlib.minecraft.OfflineSocialInteractions;
-import com.mojang.authlib.minecraft.SocialInteractionsService;
+import com.mojang.authlib.minecraft.UserApiService;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import iafenvoy.accountswitcher.AccountSwitcher;
 import iafenvoy.accountswitcher.gui.AccountScreen;
@@ -18,6 +17,7 @@ import net.minecraft.client.texture.PlayerSkinProvider;
 import net.minecraft.client.util.Session;
 
 import java.io.File;
+import java.util.Optional;
 
 public class Account {
     public static final Account EMPTY = new Account();
@@ -107,14 +107,14 @@ public class Account {
                 AccountManager.CURRENT = this;
             }).start();
         else {
-            Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
+            Session session = new Session(this.username, this.uuid, this.mcToken, Optional.empty(), Optional.empty(), Session.AccountType.MOJANG);
             ((MinecraftClientAccessor) client).setSession(session);
             AccountManager.CURRENT = this;
         }
     }
 
     private void applyServices(YggdrasilAuthenticationService services, boolean isInjector) {
-        Session session = new Session(this.username, this.uuid, this.mcToken, "mojang");
+        Session session = new Session(this.username, this.uuid, this.mcToken, Optional.empty(), Optional.empty(), Session.AccountType.MOJANG);
         ((MinecraftClientAccessor) client).setSession(session);
         MinecraftSessionService service;
         if (isInjector)
@@ -122,7 +122,7 @@ public class Account {
         else
             service = services.createMinecraftSessionService();
         ((MinecraftClientAccessor) client).setServices(service);
-        SocialInteractionsService field26902 = this.method_31382(services, this.mcToken);
+        UserApiService field26902 = this.method_31382(services, this.mcToken);
         ((MinecraftClientAccessor) client).setField26902(field26902);
         ((MinecraftClientAccessor) client).setManager(new SocialInteractionsManager(client, field26902));
         File skinDir = ((PlayerSkinProviderAccessor) client.getSkinProvider()).getSkinCacheDir();
@@ -130,12 +130,12 @@ public class Account {
     }
 
 
-    private SocialInteractionsService method_31382(YggdrasilAuthenticationService yggdrasilAuthenticationService, String token) {
+    private UserApiService method_31382(YggdrasilAuthenticationService yggdrasilAuthenticationService, String token) {
         try {
-            return yggdrasilAuthenticationService.createSocialInteractionsService(token);
+            return yggdrasilAuthenticationService.createUserApiService(token);
         } catch (AuthenticationException e) {
             AccountSwitcher.LOGGER.error("Failed to verify authentication", e);
-            return new OfflineSocialInteractions();
+            return UserApiService.OFFLINE;
         }
     }
 
