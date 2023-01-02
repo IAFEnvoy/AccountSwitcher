@@ -68,7 +68,7 @@ public class AccountScreen extends Screen {
         }));
         this.addButton(new ButtonWidget(10, 180, 80, 20, new TranslatableText("as.gui.DeleteAccount"), button -> {
             if (this.widget.getSelected() != null && this.widget.getSelected() instanceof AccountListWidget.AccountEntry)
-                AccountManager.INSTANCE.deleteAccountByUuid(((AccountListWidget.AccountEntry) this.widget.getSelected()).getAccount().getUuid());
+                AccountManager.INSTANCE.deleteAccount(((AccountListWidget.AccountEntry) this.widget.getSelected()).getAccount());
             this.refreshWidget();
         }));
     }
