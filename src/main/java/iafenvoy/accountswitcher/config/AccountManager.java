@@ -41,7 +41,7 @@ public class AccountManager {
     public void load() {
         try {
             String data = FileUtil.readFile(FILE_PATH);
-            JsonArray json = new JsonParser().parse(data).getAsJsonArray();
+            JsonArray json = JsonParser.parseString(data).getAsJsonArray();
             for (JsonElement ele : json) {
                 JsonObject obj = ele.getAsJsonObject();
                 Account.AccountType type = Account.AccountType.getByName(obj.get("type").getAsString());
@@ -98,7 +98,7 @@ public class AccountManager {
 
     public void addAccount(@NotNull Account account) {
         for (int i = 0; i < this.accounts.size(); i++)
-            if (this.accounts.get(i).getUuid().equals(account.getUuid())) {
+            if (this.accounts.get(i).equals(account)) {
                 this.accounts.set(i, account);
                 return;
             }
@@ -109,10 +109,10 @@ public class AccountManager {
         return accounts;
     }
 
-    public void deleteAccountByUuid(String uuid) {
+    public void deleteAccount(Account account) {
         int index = -1;
         for (int i = 0; i < this.accounts.size(); i++)
-            if (this.accounts.get(i).getUuid().equals(uuid)) {
+            if (this.accounts.get(i).equals(account)) {
                 index = i;
                 break;
             }
