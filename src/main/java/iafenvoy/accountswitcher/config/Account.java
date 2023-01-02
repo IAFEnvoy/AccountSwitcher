@@ -146,6 +146,21 @@ public class Account {
             new Thread(() -> screen.injectorLogin.doLogin(this, injectorServer, username, accessToken)).start();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof Account ac)) return false;
+        if (this == obj) return true;
+        if (this.type != ac.type) return false;
+        if (this.type == AccountType.Offline)
+            return this.username.equals(ac.username);
+        if (this.type == AccountType.Microsoft)
+            return this.uuid.equals(ac.uuid);
+        if (this.type == AccountType.Injector)
+            return this.uuid.equals(ac.uuid) && this.injectorServer.equals(ac.injectorServer);
+        return false;
+    }
+
     public enum AccountType {
         Offline("as.type.Offline"),//离线模式
         Microsoft("as.type.Microsoft"),//微软账户正版
