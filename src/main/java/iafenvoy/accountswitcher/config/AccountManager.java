@@ -97,7 +97,7 @@ public class AccountManager {
 
     public void addAccount(@NotNull Account account) {
         for (int i = 0; i < this.accounts.size(); i++)
-            if (this.accounts.get(i).getUuid().equals(account.getUuid())) {
+            if (this.accounts.get(i).equals(account)) {
                 this.accounts.set(i, account);
                 return;
             }
@@ -108,10 +108,10 @@ public class AccountManager {
         return accounts;
     }
 
-    public void deleteAccountByUuid(String uuid) {
+    public void deleteAccount(Account account) {
         int index = -1;
         for (int i = 0; i < this.accounts.size(); i++)
-            if (this.accounts.get(i).getUuid().equals(uuid)) {
+            if (this.accounts.get(i).equals(account)) {
                 index = i;
                 break;
             }
