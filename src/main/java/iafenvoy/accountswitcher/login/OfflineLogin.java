@@ -6,7 +6,8 @@ import java.util.UUID;
 
 public class OfflineLogin {
     public static Account generateAccount(String username) {
-        String uuid = UUID.randomUUID().toString().replace("-", "");
+        //fix issue #2
+        String uuid = UUID.nameUUIDFromBytes(("OfflinePlayer"+username).getBytes()).toString().replace("-", "");
         return new Account(Account.AccountType.Offline, "", "", username, uuid);
     }
 }
