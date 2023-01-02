@@ -20,7 +20,7 @@
   "as.gui.custom.title": "添加自定义账号",
   "as.titleScreen.nowUse": "当前使用的账号： %s ，类型： %s",
   "as.gui.RefreshAccount": "刷新此账号",
-  "as.gui.injector.label1": "认证服务器（只需要根域名）",
+  "as.gui.injector.label1": "认证服务器",
   "as.gui.injector.label2": "用户名",
   "as.gui.injector.label3": "密码",
   "as.gui.custom.label1": "玩家名",

@@ -15,7 +15,7 @@ public class InjectorLogin {
     public boolean doLogin(Account account, String server, String name, String password) {
         try {
             stats = "Login...";
-            String url = "https://" + server + "/api/yggdrasil/authserver/authenticate";
+            String url = server + "/authserver/authenticate";
             JsonObject agent = new JsonObject();
             agent.addProperty("name", "Minecraft");
             agent.addProperty("version", 1);

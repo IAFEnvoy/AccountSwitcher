@@ -13,22 +13,22 @@ public class InjectorEnvironment implements Environment {
 
     @Override
     public String getAuthHost() {
-        return "https://" + url + "/api/yggdrasil/authserver";
+        return url + "/authserver";
     }
 
     @Override
     public String getAccountsHost() {
-        return "https://" + url + "/api/yggdrasil/api";
+        return url + "/api";
     }
 
     @Override
     public String getSessionHost() {
-        return "https://" + url + "/api/yggdrasil/sessionserver";
+        return url + "/sessionserver";
     }
 
     @Override
     public String getServicesHost() {
-        return "https://" + url + "/api/yggdrasil/minecraftservices";
+        return url + "/minecraftservices";
     }
 
     @Override

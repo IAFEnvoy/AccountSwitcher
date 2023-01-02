@@ -31,7 +31,7 @@ public class LocalYggdrasilMinecraftSessionService extends YggdrasilMinecraftSes
 
     public LocalYggdrasilMinecraftSessionService(YggdrasilAuthenticationService service, String serverUrl) {
         super(service, new InjectorEnvironment(serverUrl));
-        String data = NetworkUtil.getData("https://" + serverUrl + "/api/yggdrasil");
+        String data = NetworkUtil.getData(serverUrl);
         JsonObject json = new JsonParser().parse(data).getAsJsonObject();
         this.publicKey = getPublicKey(json.get("signaturePublickey").getAsString());
     }

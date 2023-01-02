@@ -45,7 +45,7 @@ public class AddInjectorAccountScreen extends Screen {
                 parent.injectorLogin.doLogin(account, this.server.getText(), this.username.getText(), this.password.getText());
         }).start()));
         this.addButton(new ButtonWidget(this.width / 2, this.height / 2 + 25, 100, 20, new TranslatableText("as.gui.Cancel"), button -> this.openParent()));
-
+        this.server.setMaxLength(256);
     }
 
     @Override
