@@ -1,8 +1,10 @@
 package iafenvoy.accountswitcher.gui;
 
 import iafenvoy.accountswitcher.config.Account;
+import iafenvoy.accountswitcher.login.AuthRequest;
 import iafenvoy.accountswitcher.login.OfflineLogin;
 import iafenvoy.accountswitcher.utils.ButtonWidget;
+import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -26,7 +28,14 @@ public class AddOfflineAccountScreen extends Screen {
         this.usernameField = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 30, 200, 20, Text.empty()));
         this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 10, 100, 20, Text.translatable("as.gui.Accept"), button -> {
             if (this.usernameField.getText().equals("")) return;
-            Account account = OfflineLogin.generateAccount(this.usernameField.getText());
+            AuthRequest request=new AuthRequest();
+            request.name=this.usernameField.getText();
+            Account account = null;
+            try {
+                account = new OfflineLogin().doAuth(request);
+            } catch (IllegalMicrosoftAccountException e) {
+                throw new RuntimeException(e);
+            }
             parent.addAccount(account);
             this.openParent();
         }));

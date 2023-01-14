@@ -46,7 +46,7 @@ public class AccountScreen extends Screen {
         this.addField(new ButtonWidget(10, 35, 80, 20, Text.translatable("as.gui.AddOffline"), button -> client.setScreen(new AddOfflineAccountScreen(this))));
         this.addField(new ButtonWidget(10, 55, 80, 20, Text.translatable("as.gui.AddMicrosoft"), button -> new Thread(() -> {
             try {
-                Account account = microsoftLogin.doAuth();
+                Account account = microsoftLogin.doAuth(null);
                 if (account != Account.EMPTY)
                     this.addAccount(account);
             } catch (IllegalMicrosoftAccountException e) {
