@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MicrosoftLogin {
+public class MicrosoftLogin implements ILogin{
     private static final String OauthUrl = "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&prompt=login";
     private final Profiler profiler = new Profiler();
     private String code;
@@ -26,7 +26,7 @@ public class MicrosoftLogin {
     }
 
     @Nullable
-    public Account doAuth() throws IllegalMicrosoftAccountException {
+    public Account doAuth(AuthRequest request) throws IllegalMicrosoftAccountException {
         try {
             profiler.push("Initialize");
             this.init();

@@ -3,10 +3,26 @@ package iafenvoy.accountswitcher.login;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import iafenvoy.accountswitcher.config.Account;
+import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import iafenvoy.accountswitcher.utils.NetworkUtil;
 
-public class InjectorLogin {
+public class InjectorLogin implements ILogin {
     private String stats = "";
+
+    @Override
+    public Account doAuth(AuthRequest request) throws IllegalMicrosoftAccountException {
+        return null;
+    }
+
+    @Override
+    public void useAccount(Account account) {
+
+    }
+
+    @Override
+    public void refreshAccessToken(Account account) {
+
+    }
 
     public String getProcess() {
         return stats;

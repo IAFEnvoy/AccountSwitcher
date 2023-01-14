@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import iafenvoy.accountswitcher.login.AuthRequest;
 import iafenvoy.accountswitcher.login.OfflineLogin;
 import iafenvoy.accountswitcher.utils.FileUtil;
 import net.minecraft.client.MinecraftClient;
@@ -45,9 +46,11 @@ public class AccountManager {
             for (JsonElement ele : json) {
                 JsonObject obj = ele.getAsJsonObject();
                 Account.AccountType type = Account.AccountType.getByName(obj.get("type").getAsString());
-                if (type == Account.AccountType.Offline)
-                    this.accounts.add(OfflineLogin.generateAccount(obj.get("username").getAsString()));
-                else if (type == Account.AccountType.Microsoft) {
+                if (type == Account.AccountType.Offline) {
+                    AuthRequest request = new AuthRequest();
+                    request.name = obj.get("username").getAsString();
+                    this.accounts.add(new OfflineLogin().doAuth(request));
+                } else if (type == Account.AccountType.Microsoft) {
                     String accessToken = obj.get("accessToken").getAsString();
                     String refreshToken = obj.get("refreshToken").getAsString();
                     String username = obj.get("username").getAsString();
