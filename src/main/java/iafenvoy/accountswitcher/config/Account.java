@@ -23,7 +23,7 @@ public class Account {
     public static final Account EMPTY = new Account();
     private static final MinecraftClient client = MinecraftClient.getInstance();
     private final AccountType type;
-    private String accessToken = "", refreshToken = "", mcToken = "";
+    private String accessToken = "", refreshToken = "", mcToken = "",clientToken = "";
     private String username = "", uuid = "";
     private String injectorServer = "";
 
@@ -91,6 +91,13 @@ public class Account {
         this.uuid = uuid;
     }
 
+    public String getClientToken() {
+        return clientToken;
+    }
+
+    public void setClientToken(String clientToken) {
+        this.clientToken = clientToken;
+    }
     public void use(AccountScreen screen) {
         if (this.type == AccountType.Microsoft)
             new Thread(() -> {
@@ -161,12 +168,14 @@ public class Account {
         return false;
     }
 
+
     public enum AccountType {
         Offline("as.type.Offline"),//离线模式
         Microsoft("as.type.Microsoft"),//微软账户正版
         Injector("as.type.Injector"),//外置登录
-        Custom("as.type.Custom");//自定义登录
-        //不支持Mojang账户和统一通行证哦~
+        Custom("as.type.Custom"),//自定义登录
+        UnifiedPass("as.type.UnifiedPassLogin");//统一通行证
+        //不支持Mojang账户哦~
 
         private final String key;
 

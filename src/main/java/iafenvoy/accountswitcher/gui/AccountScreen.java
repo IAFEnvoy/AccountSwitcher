@@ -4,6 +4,7 @@ import iafenvoy.accountswitcher.config.Account;
 import iafenvoy.accountswitcher.config.AccountManager;
 import iafenvoy.accountswitcher.login.InjectorLogin;
 import iafenvoy.accountswitcher.login.MicrosoftLogin;
+import iafenvoy.accountswitcher.login.UnifiedPassLogin;
 import iafenvoy.accountswitcher.utils.ButtonWidget;
 import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import iafenvoy.accountswitcher.utils.ToastUtil;
@@ -17,6 +18,7 @@ public class AccountScreen extends Screen {
     private static final MinecraftClient client = MinecraftClient.getInstance();
     public final MicrosoftLogin microsoftLogin = new MicrosoftLogin();
     public final InjectorLogin injectorLogin = new InjectorLogin();
+    public final UnifiedPassLogin unifiedPassLogin = new UnifiedPassLogin();
     private final Screen parent;
     private AccountListWidget widget;
     private boolean initialized = false;
@@ -87,7 +89,9 @@ public class AccountScreen extends Screen {
         if (this.microsoftLogin.getProcess() != null)
             context.drawCenteredTextWithShadow(this.textRenderer, Text.of(this.microsoftLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
         if (this.injectorLogin.getProcess() != null)
-            context.drawCenteredTextWithShadow(this.textRenderer, Text.of(this.microsoftLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
+            context.drawCenteredTextWithShadow(this.textRenderer, Text.of(this.injectorLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
+        if (this.unifiedPassLogin.getProcess() != null)
+            context.drawCenteredTextWithShadow(this.textRenderer, Text.of(this.unifiedPassLogin.getProcess()), this.width / 2, this.height - 14, 16777215);
         super.render(context, mouseX, mouseY, delta);
     }
 
