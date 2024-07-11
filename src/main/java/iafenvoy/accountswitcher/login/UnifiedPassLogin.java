@@ -8,8 +8,7 @@ import iafenvoy.accountswitcher.utils.Profiler;
 
 public class UnifiedPassLogin implements ILogin {
     private final Profiler profiler = new Profiler();
-    private static final String SERVER_ID = "your_server_id"; // 你的服务器ID
-    private static final String BASE_URL = "https://auth.mc-user.com:233/" + SERVER_ID + "/";
+    private static final String BASE_URL = "https://auth.mc-user.com:233/$server_id/";
     private static final String AUTHENTICATE_URL = BASE_URL + "authserver/authenticate";
     private static final String REFRESH_URL = BASE_URL + "authserver/refresh";
     private static final String VALIDATE_URL = BASE_URL + "authserver/validate";
@@ -30,14 +29,16 @@ public class UnifiedPassLogin implements ILogin {
         root.addProperty("clientToken", clientToken);
         root.addProperty("requestUser", true);
 
-        String data = NetworkUtil.getDataWithJson(AUTHENTICATE_URL, root);
+        String data = NetworkUtil.getDataWithJson(AUTHENTICATE_URL.replace("$server_id",request.server), root);
         JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         this.accessToken = json.get("accessToken").getAsString();
         this.clientToken = json.get("clientToken").getAsString();
         this.username = json.get("selectedProfile").getAsJsonObject().get("name").getAsString();
         this.uuid = json.get("selectedProfile").getAsJsonObject().get("id").getAsString();
 
-        return new Account(Account.AccountType.UnifiedPass,this.username, this.uuid, this.accessToken, this.clientToken);
+        Account a = new Account(Account.AccountType.UnifiedPass,this.username, this.uuid, this.accessToken, this.clientToken);
+        a.setUnifiedServer(request.server);
+        return a;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class UnifiedPassLogin implements ILogin {
         root.addProperty("clientToken", this.clientToken);
         root.addProperty("requestUser", true);
 
-        String data = NetworkUtil.getDataWithJson(REFRESH_URL, root);
+        String data = NetworkUtil.getDataWithJson(REFRESH_URL.replace("$server_id",account.getUnifiedServer()), root);
         JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         this.accessToken = json.get("accessToken").getAsString();
         this.clientToken = json.get("clientToken").getAsString();

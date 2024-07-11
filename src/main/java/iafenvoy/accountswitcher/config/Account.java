@@ -26,6 +26,7 @@ public class Account {
     private String accessToken = "", refreshToken = "", mcToken = "",clientToken = "";
     private String username = "", uuid = "";
     private String injectorServer = "";
+    private String unifiedServer = "";
 
     public Account() {
         this.type = null;
@@ -41,6 +42,14 @@ public class Account {
         this.refreshToken = refreshToken;
         this.username = username;
         this.uuid = uuid;
+    }
+
+    public String getUnifiedServer() {
+        return unifiedServer;
+    }
+
+    public void setUnifiedServer(String unifiedServer) {
+        this.unifiedServer = unifiedServer;
     }
 
     public AccountType getType() {

@@ -58,16 +58,17 @@ public class AccountScreen extends Screen {
             }
         }, "Microsoft Login").start()));
         this.addField(new ButtonWidget(10, 75, 80, 20, Text.translatable("as.gui.AddInjector"), button -> client.setScreen(new AddInjectorAccountScreen(this))));
-        this.addField(new ButtonWidget(10, 95, 80, 20, Text.translatable("as.gui.AddCustom"), button -> client.setScreen(new AddCustomAccountScreen(this))));
-        this.addField(new ButtonWidget(10, 115, 80, 20, Text.translatable("as.gui.UseAccount"), button -> {
+        this.addField(new ButtonWidget(10, 95, 80, 20, Text.translatable("as.gui.AddUnifiedPass"), button -> client.setScreen(new AddUnifiedPassAccountScreen(this))));
+        this.addField(new ButtonWidget(10, 115, 80, 20, Text.translatable("as.gui.AddCustom"), button -> client.setScreen(new AddCustomAccountScreen(this))));
+        this.addField(new ButtonWidget(10, 135, 80, 20, Text.translatable("as.gui.UseAccount"), button -> {
             if (this.widget.getSelectedOrNull() != null && this.widget.getSelectedOrNull() instanceof AccountListWidget.AccountEntry)
                 ((AccountListWidget.AccountEntry) this.widget.getSelectedOrNull()).getAccount().use(this);
         }));
-        this.addField(new ButtonWidget(10, 135, 80, 20, Text.translatable("as.gui.RefreshAccount"), button -> {
+        this.addField(new ButtonWidget(10, 155, 80, 20, Text.translatable("as.gui.RefreshAccount"), button -> {
             if (this.widget.getSelectedOrNull() != null && this.widget.getSelectedOrNull() instanceof AccountListWidget.AccountEntry)
                 ((AccountListWidget.AccountEntry) this.widget.getSelectedOrNull()).getAccount().refresh(this);
         }));
-        this.addField(new ButtonWidget(10, 180, 80, 20, Text.translatable("as.gui.DeleteAccount"), button -> {
+        this.addField(new ButtonWidget(10, 190, 80, 20, Text.translatable("as.gui.DeleteAccount"), button -> {
             if (this.widget.getSelectedOrNull() != null && this.widget.getSelectedOrNull() instanceof AccountListWidget.AccountEntry)
                 AccountManager.INSTANCE.deleteAccount(((AccountListWidget.AccountEntry) this.widget.getSelectedOrNull()).getAccount());
             this.refreshWidget();
