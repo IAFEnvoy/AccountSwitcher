@@ -2,6 +2,7 @@ package iafenvoy.accountswitcher.login;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import iafenvoy.accountswitcher.AccountSwitcher;
 import iafenvoy.accountswitcher.config.Account;
 import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import iafenvoy.accountswitcher.utils.NetworkUtil;
@@ -27,7 +28,7 @@ public class InjectorLogin implements ILogin {
             root.addProperty("password", password);
 
             String data = NetworkUtil.getDataWithJson(url, root);
-            JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+            JsonObject json = JsonParser.parseString(data).getAsJsonObject();
             if (json.has("error")) {
                 this.stats = json.get("errorMessage").getAsString();
                 return false;
@@ -43,13 +44,13 @@ public class InjectorLogin implements ILogin {
             account.setInjectorServer(server);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            AccountSwitcher.LOGGER.error("Failed to login", e);
             return false;
         }
     }
 
     @Override
-    public Account doAuth(AuthRequest request) throws IllegalMicrosoftAccountException {
+    public Account doAuth(AuthRequest request) {
         return null;
     }
 

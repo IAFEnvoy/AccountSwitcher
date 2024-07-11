@@ -3,6 +3,7 @@ package iafenvoy.accountswitcher.utils;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.ibm.icu.impl.Pair;
+import iafenvoy.accountswitcher.AccountSwitcher;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
@@ -81,7 +82,7 @@ public class NetworkUtil {
             con.setDoInput(true);
             con.setDoOutput(true);
             con.setUseCaches(false);
-            if (header.size() > 0)
+            if (!header.isEmpty())
                 for (Pair<String, String> p : header)
                     con.setRequestProperty(p.first, p.second);
             if (method == Method.POST) {
@@ -91,7 +92,7 @@ public class NetworkUtil {
                 osw.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            AccountSwitcher.LOGGER.error("Failed to fetch {}", url, e);
         }
         if (con != null)
             con.disconnect();
@@ -105,12 +106,12 @@ public class NetworkUtil {
             while (((temp = br.readLine())) != null)
                 builder.append(temp).append("\n");
         } catch (Exception e) {
-            e.printStackTrace();
+            AccountSwitcher.LOGGER.error("Failed to fetch {}", url, e);
         }
         return builder.toString();
     }
 
-    private enum Method {
+    public enum Method {
         POST("POST"), GET("GET");
         private final String text;
 

@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import iafenvoy.accountswitcher.AccountSwitcher;
 import iafenvoy.accountswitcher.login.AuthRequest;
 import iafenvoy.accountswitcher.login.OfflineLogin;
 import iafenvoy.accountswitcher.utils.FileUtil;
@@ -63,11 +64,10 @@ public class AccountManager {
                     Account a = new Account(type, accessToken, "", username, uuid);
                     a.setInjectorServer(injectorServer);
                     this.accounts.add(a);
-
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            AccountSwitcher.LOGGER.error("Failed to load account info", e);
         }
     }
 
@@ -94,7 +94,7 @@ public class AccountManager {
             }
             FileUtil.saveFile(FILE_PATH, array.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            AccountSwitcher.LOGGER.error("Failed to save account info", e);
         }
     }
 

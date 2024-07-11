@@ -49,6 +49,7 @@ public class TitleScreenMixin extends Screen {
         context.drawCenteredTextWithShadow(this.textRenderer, AccountManager.getAccountInfoText(), this.width / 2, this.height - 50, 16777215 | l);
     }
 
+    @Unique
     public void addField(ClickableWidget drawable) {
         this.addDrawable(drawable);
         this.addSelectableChild(drawable);

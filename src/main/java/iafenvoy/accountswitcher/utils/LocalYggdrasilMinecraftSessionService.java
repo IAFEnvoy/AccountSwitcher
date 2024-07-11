@@ -8,8 +8,10 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
+import com.mojang.authlib.yggdrasil.YggdrasilServicesKeyInfo;
 import com.mojang.authlib.yggdrasil.response.MinecraftTexturesPayload;
 import com.mojang.util.UUIDTypeAdapter;
+import iafenvoy.accountswitcher.AccountSwitcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,7 +34,7 @@ public class LocalYggdrasilMinecraftSessionService extends YggdrasilMinecraftSes
     public LocalYggdrasilMinecraftSessionService(YggdrasilAuthenticationService service, String serverUrl) {
         super(service, new InjectorEnvironment(serverUrl));
         String data = NetworkUtil.getData("https://" + serverUrl + "/api/yggdrasil");
-        JsonObject json = new JsonParser().parse(data).getAsJsonObject();
+        JsonObject json = JsonParser.parseString(data).getAsJsonObject();
         this.publicKey = getPublicKey(json.get("signaturePublickey").getAsString());
     }
 
@@ -44,7 +46,7 @@ public class LocalYggdrasilMinecraftSessionService extends YggdrasilMinecraftSes
             KeyFactory factory = KeyFactory.getInstance("RSA");
             return factory.generatePublic(spec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
+            AccountSwitcher.LOGGER.error("Failed to load public key", e);
         }
         return null;
     }

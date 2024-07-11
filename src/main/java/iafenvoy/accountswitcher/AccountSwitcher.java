@@ -1,12 +1,12 @@
 package iafenvoy.accountswitcher;
 
+import com.mojang.logging.LogUtils;
 import iafenvoy.accountswitcher.config.AccountManager;
 import net.fabricmc.api.ClientModInitializer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 public class AccountSwitcher implements ClientModInitializer {
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "accountswitcher";
     public static final String MOD_NAME = "Account Switcher";
 

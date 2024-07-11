@@ -27,15 +27,11 @@ public class AddOfflineAccountScreen extends Screen {
         super.init();
         this.usernameField = (TextFieldWidget) this.addField(new TextFieldWidget(client.textRenderer, this.width / 2 - 100, this.height / 2 - 30, 200, 20, Text.empty()));
         this.addField(new ButtonWidget(this.width / 2 - 100, this.height / 2 + 10, 100, 20, Text.translatable("as.gui.Accept"), button -> {
-            if (this.usernameField.getText().equals("")) return;
+            if (this.usernameField.getText().isEmpty()) return;
             AuthRequest request = new AuthRequest();
             request.name = this.usernameField.getText();
-            Account account = null;
-            try {
-                account = new OfflineLogin().doAuth(request);
-            } catch (IllegalMicrosoftAccountException e) {
-                throw new RuntimeException(e);
-            }
+            Account account;
+            account = new OfflineLogin().doAuth(request);
             this.parent.addAccount(account);
             this.openParent();
         }));

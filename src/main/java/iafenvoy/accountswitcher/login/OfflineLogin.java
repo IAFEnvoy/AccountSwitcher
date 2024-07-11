@@ -8,7 +8,7 @@ import java.util.UUID;
 public class OfflineLogin implements ILogin {
 
     @Override
-    public Account doAuth(AuthRequest request) throws IllegalMicrosoftAccountException {
+    public Account doAuth(AuthRequest request) {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         return new Account(Account.AccountType.Offline, "", "", request.name, uuid);
     }

@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.icu.impl.Pair;
+import iafenvoy.accountswitcher.AccountSwitcher;
 import iafenvoy.accountswitcher.config.Account;
 import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import iafenvoy.accountswitcher.utils.NetworkUtil;
@@ -48,7 +49,7 @@ public class MicrosoftLogin implements ILogin {
             this.profiler.pop();
             return account;
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            AccountSwitcher.LOGGER.error("Failed to do microsoft auth", e);
             return Account.EMPTY;
         }
     }
@@ -72,7 +73,7 @@ public class MicrosoftLogin implements ILogin {
             account.setUuid(this.uuid);
             this.profiler.pop();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            AccountSwitcher.LOGGER.error("Failed to do microsoft auth", e);
         } catch (IllegalMicrosoftAccountException ignored) {
 
         }
@@ -89,7 +90,7 @@ public class MicrosoftLogin implements ILogin {
             account.setRefreshToken(this.refreshToken);
             this.profiler.pop();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            AccountSwitcher.LOGGER.error("Failed to do microsoft auth", e);
         }
     }
 
@@ -104,7 +105,6 @@ public class MicrosoftLogin implements ILogin {
         this.username = this.uuid = null;
     }
 
-    //教程：https://minecraft.fandom.com/zh/wiki/%E6%95%99%E7%A8%8B/%E7%BC%96%E5%86%99%E5%90%AF%E5%8A%A8%E5%99%A8
     //第一步：微软Oauth流程，这个操作只能浏览器执行
     private void openOauth() {
         NetworkUtil.openBrowser("Login your Microsoft account", OauthUrl, url -> {
