@@ -13,7 +13,6 @@ public class AccountSwitcher implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         LOGGER.info("[" + MOD_NAME + "]Initializing...");
-
         AccountManager.INSTANCE.load();
         AccountManager.setAccountFromClient();
     }
