@@ -46,7 +46,7 @@ public class TitleScreenMixin extends Screen {
         float f = this.doBackgroundFade ? (float) (Util.getMeasuringTimeMs() - this.backgroundFadeStart) / 1000.0F : 1.0F;
         float g = this.doBackgroundFade ? MathHelper.clamp(f - 1.0F, 0.0F, 1.0F) : 1.0F;
         int l = MathHelper.ceil(g * 255.0F) << 24;
-        context.drawCenteredTextWithShadow(this.textRenderer, AccountManager.getAccountInfoText(), this.width / 2, this.height - 50, 16777215 | l);
+        context.drawCenteredTextWithShadow(this.textRenderer, AccountManager.getAccountInfoText(), this.width / 2, this.height - 58, 16777215 | l);
     }
 
     @Unique
