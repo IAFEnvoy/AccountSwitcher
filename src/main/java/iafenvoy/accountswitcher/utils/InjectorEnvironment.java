@@ -13,22 +13,22 @@ public class InjectorEnvironment implements Environment {
 
     @Override
     public String getAuthHost() {
-        return "https://" + url + "/api/yggdrasil/authserver";
+        return "https://" + this.url + "/api/yggdrasil/authserver";
     }
 
     @Override
     public String getAccountsHost() {
-        return "https://" + url + "/api/yggdrasil/api";
+        return "https://" + this.url + "/api/yggdrasil/api";
     }
 
     @Override
     public String getSessionHost() {
-        return "https://" + url + "/api/yggdrasil/sessionserver";
+        return "https://" + this.url + "/api/yggdrasil/sessionserver";
     }
 
     @Override
     public String getServicesHost() {
-        return "https://" + url + "/api/yggdrasil/minecraftservices";
+        return "https://" + this.url + "/api/yggdrasil/minecraftservices";
     }
 
     @Override
@@ -39,11 +39,11 @@ public class InjectorEnvironment implements Environment {
     @Override
     public String asString() {
         return new StringJoiner(", ", "", "")
-                .add("authHost='" + getAuthHost() + "'")
-                .add("accountsHost='" + getAccountsHost() + "'")
-                .add("sessionHost='" + getSessionHost() + "'")
-                .add("servicesHost='" + getServicesHost() + "'")
-                .add("name='" + getName() + "'")
+                .add("authHost='" + this.getAuthHost() + "'")
+                .add("accountsHost='" + this.getAccountsHost() + "'")
+                .add("sessionHost='" + this.getSessionHost() + "'")
+                .add("servicesHost='" + this.getServicesHost() + "'")
+                .add("name='" + this.getName() + "'")
                 .toString();
     }
 }

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MicrosoftLogin implements ILogin{
+public class MicrosoftLogin implements ILogin {
     private static final String OauthUrl = "https://login.live.com/oauth20_authorize.srf?client_id=00000000402b5328&response_type=code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&prompt=login";
     private final Profiler profiler = new Profiler();
     private String code;
@@ -28,24 +28,24 @@ public class MicrosoftLogin implements ILogin{
     @Nullable
     public Account doAuth(AuthRequest request) throws IllegalMicrosoftAccountException {
         try {
-            profiler.push("Initialize");
+            this.profiler.push("Initialize");
             this.init();
-            profiler.swap("1/6 - Oauth");
+            this.profiler.swap("1/6 - Oauth");
             this.openOauth();
-            profiler.swap("2/6 - To token");
+            this.profiler.swap("2/6 - To token");
             this.toToken();
-            profiler.swap("3/6 - XBox Live Auth");
+            this.profiler.swap("3/6 - XBox Live Auth");
             this.xBoxLiveAuth();
-            profiler.swap("4/6 - XSTS Auth");
+            this.profiler.swap("4/6 - XSTS Auth");
             this.authXSTS();
-            profiler.swap("5/6 - To Minecraft Token");
+            this.profiler.swap("5/6 - To Minecraft Token");
             this.getMinecraftToken();
-            profiler.swap("6/6 - Getting UUID");
+            this.profiler.swap("6/6 - Getting UUID");
             this.getUuid();
-            profiler.swap("Done");
-            Account account = new Account(Account.AccountType.Microsoft, accessToken, refreshToken, username, uuid);
-            account.setMcToken(mcToken);
-            profiler.pop();
+            this.profiler.swap("Done");
+            Account account = new Account(Account.AccountType.Microsoft, this.accessToken, this.refreshToken, this.username, this.uuid);
+            account.setMcToken(this.mcToken);
+            this.profiler.pop();
             return account;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -55,22 +55,22 @@ public class MicrosoftLogin implements ILogin{
 
     public void useAccount(Account account) {
         try {
-            profiler.push("Initialize");
+            this.profiler.push("Initialize");
             this.init();
             this.accessToken = account.getAccessToken();
-            profiler.swap("1/4 - XBox Live Auth");
+            this.profiler.swap("1/4 - XBox Live Auth");
             this.xBoxLiveAuth();
-            profiler.swap("2/4 - XSTS Auth");
+            this.profiler.swap("2/4 - XSTS Auth");
             this.authXSTS();
-            profiler.swap("3/4 - To Minecraft Token");
+            this.profiler.swap("3/4 - To Minecraft Token");
             this.getMinecraftToken();
-            profiler.swap("4/4 - Getting UUID");
+            this.profiler.swap("4/4 - Getting UUID");
             this.getUuid();
-            profiler.swap("Done");
+            this.profiler.swap("Done");
             account.setMcToken(this.mcToken);
             account.setUsername(this.username);
             account.setUuid(this.uuid);
-            profiler.pop();
+            this.profiler.pop();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (IllegalMicrosoftAccountException ignored) {
@@ -80,21 +80,21 @@ public class MicrosoftLogin implements ILogin{
 
     public void refreshAccessToken(Account account) {
         try {
-            profiler.push("Initialize");
+            this.profiler.push("Initialize");
             this.init();
-            profiler.push("Refreshing...");
+            this.profiler.push("Refreshing...");
             this.refreshToken = account.getRefreshToken();
             this.refreshToken();
             account.setAccessToken(this.accessToken);
             account.setRefreshToken(this.refreshToken);
-            profiler.pop();
+            this.profiler.pop();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
     }
 
     public String getProcess() {
-        return profiler.getLocation();
+        return this.profiler.getLocation();
     }
 
     private void init() {
@@ -113,7 +113,7 @@ public class MicrosoftLogin implements ILogin{
             for (String s : data) {
                 String[] d = s.split("=");
                 if (d[0].equals("code")) {
-                    code = d[1];
+                    this.code = d[1];
                     return true;
                 }
             }

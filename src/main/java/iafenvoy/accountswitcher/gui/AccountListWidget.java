@@ -2,8 +2,8 @@ package iafenvoy.accountswitcher.gui;
 
 import iafenvoy.accountswitcher.config.Account;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +49,7 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
     @Override
     public void setSelected(@Nullable AccountListWidget.Entry entry) {
         super.setSelected(entry);
-        client.getNarratorManager().narrate((Text.translatable("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelectedOrNull())).account.getUsername())).getString());
+        this.client.getNarratorManager().narrate((Text.translatable("narrator.select", ((AccountEntry) Objects.requireNonNull(this.getSelectedOrNull())).account.getUsername())).getString());
     }
 
     @Override
@@ -71,10 +71,10 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
         }
 
         @Override
-        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            client.textRenderer.draw(matrices, this.account.getUsername(), (float) (x + 32 + 3), (float) (y + 1), 16777215);
-            client.textRenderer.draw(matrices, this.account.getType().getName(), (float) (x + 32 + 3), (float) (y + 1 + 9), 16777215);
-            client.textRenderer.draw(matrices, this.account.getUuid(), (float) (x + 32 + 3), (float) (y + 1 + 18), 16777215);
+        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            context.drawText(AccountListWidget.this.client.textRenderer, this.account.getUsername(), x + 32 + 3, y + 1, 16777215, true);
+            context.drawText(AccountListWidget.this.client.textRenderer, this.account.getUsername(), x + 32 + 3, y + 1 + 9, 16777215, true);
+            context.drawText(AccountListWidget.this.client.textRenderer, this.account.getUsername(), x + 32 + 3, y + 1 + 18, 16777215, true);
         }
 
         @Override
@@ -84,7 +84,7 @@ public class AccountListWidget extends AlwaysSelectedEntryListWidget<AccountList
         }
 
         public Account getAccount() {
-            return account;
+            return this.account;
         }
 
         @Override

@@ -45,9 +45,9 @@ public class AccountManager {
             for (JsonElement ele : json) {
                 JsonObject obj = ele.getAsJsonObject();
                 Account.AccountType type = Account.AccountType.getByName(obj.get("type").getAsString());
-                if (type == Account.AccountType.Offline){
+                if (type == Account.AccountType.Offline) {
                     AuthRequest request = new AuthRequest();
-                    request.name=obj.get("username").getAsString();
+                    request.name = obj.get("username").getAsString();
                     this.accounts.add(new OfflineLogin().doAuth(request));
                 } else if (type == Account.AccountType.Microsoft) {
                     String accessToken = obj.get("accessToken").getAsString();
@@ -108,7 +108,7 @@ public class AccountManager {
     }
 
     public List<Account> getAccounts() {
-        return accounts;
+        return this.accounts;
     }
 
     public void deleteAccount(Account account) {

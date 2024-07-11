@@ -6,16 +6,16 @@ import iafenvoy.accountswitcher.config.Account;
 import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 import iafenvoy.accountswitcher.utils.NetworkUtil;
 
-public class InjectorLogin implements ILogin{
+public class InjectorLogin implements ILogin {
     private String stats = "";
 
     public String getProcess() {
-        return stats;
+        return this.stats;
     }
 
     public boolean doLogin(Account account, String server, String name, String password) {
         try {
-            stats = "Login...";
+            this.stats = "Login...";
             String url = "https://" + server + "/api/yggdrasil/authserver/authenticate";
             JsonObject agent = new JsonObject();
             agent.addProperty("name", "Minecraft");
@@ -29,10 +29,10 @@ public class InjectorLogin implements ILogin{
             String data = NetworkUtil.getDataWithJson(url, root);
             JsonObject json = new JsonParser().parse(data).getAsJsonObject();
             if (json.has("error")) {
-                stats = json.get("errorMessage").getAsString();
+                this.stats = json.get("errorMessage").getAsString();
                 return false;
             }
-            stats = "";
+            this.stats = "";
             String mcToken = json.get("accessToken").getAsString();
             String uuid = json.get("selectedProfile").getAsJsonObject().get("id").getAsString();
             String username = json.get("selectedProfile").getAsJsonObject().get("name").getAsString();

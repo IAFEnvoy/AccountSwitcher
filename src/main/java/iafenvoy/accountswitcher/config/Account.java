@@ -44,11 +44,11 @@ public class Account {
     }
 
     public AccountType getType() {
-        return type;
+        return this.type;
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return this.accessToken;
     }
 
     public void setAccessToken(String accessToken) {
@@ -56,7 +56,7 @@ public class Account {
     }
 
     public String getRefreshToken() {
-        return refreshToken;
+        return this.refreshToken;
     }
 
     public void setRefreshToken(String refreshToken) {
@@ -64,7 +64,11 @@ public class Account {
     }
 
     public String getInjectorServer() {
-        return injectorServer;
+        return this.injectorServer;
+    }
+
+    public void setInjectorServer(String injectorServer) {
+        this.injectorServer = injectorServer;
     }
 
     public void setMcToken(String mcToken) {
@@ -72,7 +76,7 @@ public class Account {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -80,15 +84,11 @@ public class Account {
     }
 
     public String getUuid() {
-        return uuid;
+        return this.uuid;
     }
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public void setInjectorServer(String injectorServer) {
-        this.injectorServer = injectorServer;
     }
 
     public void use(AccountScreen screen) {
@@ -101,7 +101,7 @@ public class Account {
             }).start();
         else if (this.type == AccountType.Injector)
             new Thread(() -> {
-                screen.injectorLogin.doLogin(this, injectorServer, username, accessToken);
+                screen.injectorLogin.doLogin(this, this.injectorServer, this.username, this.accessToken);
                 YggdrasilAuthenticationService services = new LocalYggdrasilAuthenticationService(((MinecraftClientAccessor) client).getNetProxy(), this.injectorServer);
                 this.applyServices(services, true);
                 AccountManager.CURRENT = this;
@@ -143,7 +143,7 @@ public class Account {
         if (this.type == AccountType.Microsoft)
             new Thread(() -> screen.microsoftLogin.refreshAccessToken(this)).start();
         if (this.type == AccountType.Injector)
-            new Thread(() -> screen.injectorLogin.doLogin(this, injectorServer, username, accessToken)).start();
+            new Thread(() -> screen.injectorLogin.doLogin(this, this.injectorServer, this.username, this.accessToken)).start();
     }
 
     @Override
@@ -182,7 +182,7 @@ public class Account {
         }
 
         public String getName() {
-            return I18n.translate(key);
+            return I18n.translate(this.key);
         }
 
         public String getKey() {

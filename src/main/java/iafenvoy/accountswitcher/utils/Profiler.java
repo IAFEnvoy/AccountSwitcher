@@ -20,6 +20,6 @@ public class Profiler {
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 }

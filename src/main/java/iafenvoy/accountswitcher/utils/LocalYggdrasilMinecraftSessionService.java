@@ -3,7 +3,7 @@ package iafenvoy.accountswitcher.utils;
 import com.google.common.collect.Iterables;
 import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.InsecureTextureException;
+import com.mojang.authlib.minecraft.InsecurePublicKeyException;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
@@ -60,18 +60,18 @@ public class LocalYggdrasilMinecraftSessionService extends YggdrasilMinecraftSes
         if (requireSecure) {
             if (!textureProperty.hasSignature()) {
                 LOGGER.error("Signature is missing from textures payload");
-                throw new InsecureTextureException("Signature is missing from textures payload");
+                throw new InsecurePublicKeyException("Signature is missing from textures payload");
             }
-            if (!textureProperty.isSignatureValid(publicKey)) {
+            if (!textureProperty.isSignatureValid(this.publicKey)) {
                 LOGGER.error("Textures payload has been tampered with (signature invalid)");
-                throw new InsecureTextureException("Textures payload has been tampered with (signature invalid)");
+                throw new InsecurePublicKeyException("Textures payload has been tampered with (signature invalid)");
             }
         }
 
         final MinecraftTexturesPayload result;
         try {
             final String json = new String(org.apache.commons.codec.binary.Base64.decodeBase64(textureProperty.getValue()), StandardCharsets.UTF_8);
-            result = gson.fromJson(json, MinecraftTexturesPayload.class);
+            result = this.gson.fromJson(json, MinecraftTexturesPayload.class);
         } catch (final JsonParseException e) {
             LOGGER.error("Could not decode textures payload", e);
             return new HashMap<>();

@@ -5,7 +5,7 @@ import iafenvoy.accountswitcher.utils.IllegalMicrosoftAccountException;
 
 import java.util.UUID;
 
-public class OfflineLogin implements ILogin{
+public class OfflineLogin implements ILogin {
 
     @Override
     public Account doAuth(AuthRequest request) throws IllegalMicrosoftAccountException {
